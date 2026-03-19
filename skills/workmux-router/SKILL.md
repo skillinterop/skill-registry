@@ -176,34 +176,6 @@ Git 루트일 수도 있고, 특정 worktree 디렉토리일 수도 있다.
 
 ---
 
-## Branch Naming Strategy
-
-브랜치/작업 핸들은 사용자의 자연어 요청을 요약해 생성한다.
-
-권장 패턴:
-
-- `feature/<topic>`
-- `fix/<topic>`
-- `review/pr-<number>-fixes`
-- `investigate/<topic>`
-- `docs/<topic>`
-- `chore/<topic>`
-
-예:
-- `feature/auth-refactor`
-- `fix/ci-payment-timeout`
-- `review/pr-482-p1-fixes`
-- `investigate/order-rollback`
-- `docs/restclient-migration`
-
-### Naming Rules
-- 짧고 의미 있게
-- 작업 목적이 바로 드러나게
-- temp, test, fix1 같은 모호한 이름 금지
-- 가능하면 PR 번호나 핵심 토픽 포함
-
----
-
 ## Session Strategy
 
 ### 기본 원칙
@@ -216,7 +188,7 @@ Git 루트일 수도 있고, 특정 worktree 디렉토리일 수도 있다.
 ### Preferred UX
 1. 가능한 경우:
    - 새 worktree 생성
-   - **사용자 선호 도구(`cmux` 또는 `tmux`)로 새 세션 시작**
+   - **사용자 선호 도구(`cmux` 또는 `tmux`)로 새 세션 시작 (반드시 기존 세션 보존)**
    - 작업 지시문 주입
    - 해당 세션으로 사용자 포커스 이동
 
@@ -259,7 +231,7 @@ Git 루트일 수도 있고, 특정 worktree 디렉토리일 수도 있다.
 ## Minimal Execution Algorithm
 
 ### Step 1. Context detection & Tool check
-- **기본 도구(`git`, `workmux`, `tmux`)가 설치되어 있는지 확인**
+- **기본 도구(`git`, `workmux`, `tmux`, `cmux`)가 설치되어 있는지 확인**
 - 현재 경로 확인
 - git root 확인
 - 현재 브랜치 확인
@@ -289,14 +261,20 @@ Git 루트일 수도 있고, 특정 worktree 디렉토리일 수도 있다.
 
 ### Step 5. Session handling
 - **사용자 선호도 또는 설치 여부(`cmux` vs `tmux`)에 따라 세션 관리 도구 결정**
-- 기존 세션이 있으면 재개
+- **비파괴적 확장(Safe Session Expansion)**:
+  - 현재 이미 세션 내부라면, 새로운 윈도우(`cmux add`)나 페인을 추가하여 독립적인 작업 공간을 확보한다.
+  - **절대 기존 세션을 죽이거나(kill), 초기화(reset)하거나, 덮어씌우지 않는다.**
+  - 세션 전환이 어렵다면, 새 워크트리 폴더로 `cd` 이동하는 것만 수행한다.
+- 기존 세션이 있으면 재개하되, 현재 환경을 보호한다.
 - 없으면 새 세션 시작
 - 작업 프롬프트 전달
 
 ### Step 6. User feedback
 사용자에게 다음을 명확히 보여준다.
 
-- 선택된 worktree
+- 선택된 worktree 경로
+- **실제 에이전트가 도달한 경로 확인 (cd 결과)**
+- 사용한 세션 도구 및 상태(새 윈도우/새 세션 등)
 - 브랜치명
 - 새로 만들었는지 / 기존 것 재사용인지
 - 현재 작업 목적
@@ -330,12 +308,43 @@ Git 루트일 수도 있고, 특정 worktree 디렉토리일 수도 있다.
 
 ## Safety Rules
 
-1. 사용자의 확인 없이 main/master/release 브랜치에서 직접 작업하지 않는다
-2. 기존 worktree를 삭제/머지하기 전에는 명시적 의도를 확인한다
-3. 같은 요청을 여러 번 받아도 동일한 worktree가 있으면 중복 생성하지 않는다
-4. 새 worktree를 만들기 전에 기존 유사 worktree 존재 여부를 먼저 확인한다
-5. 후속 작업은 가능한 한 기존 작업 공간에 귀속한다
-6. unrelated 작업은 반드시 분리한다
+1. **절대 기존 세션 파괴 금지**: 사용자가 이미 사용 중인 `cmux` 또는 `tmux` 세션을 죽이거나(kill), 초기화(reset/overwrite)하거나, 강제로 닫지 않는다.
+2. **세션 증설(Additive) 원칙**: 새로운 작업이 필요할 경우 기존 세션에 새로운 윈도우나 페인을 추가하는 방식으로만 동작하며, 기존 작업물을 덮어씌우지 않는다.
+3. **실행 전 경로 확인**: 실제 코딩 작업을 시작하기 전, 현재 에이전트의 작업 디렉토리가 `workmux`로 지정한 워크트리 경로와 일치하는지 반드시 재검토한다.
+4. 사용자의 확인 없이 main/master/release 브랜치에서 직접 작업하지 않는다.
+5. 기존 worktree를 삭제/머지하기 전에는 명시적 의도를 확인한다.
+6. 같은 요청을 여러 번 받아도 동일한 worktree가 있으면 중복 생성하지 않는다.
+7. 새 worktree를 만들기 전에 기존 유사 worktree 존재 여부를 먼저 확인한다.
+8. 후속 작업은 가능한 한 기존 작업 공간에 귀속한다.
+9. unrelated 작업은 반드시 분리한다.
+
+---
+
+## Branch Naming Strategy
+
+브랜치/작업 핸들은 사용자의 자연어 요청을 요약해 생성한다.
+
+권장 패턴:
+
+- `feature/<topic>`
+- `fix/<topic>`
+- `review/pr-<number>-fixes`
+- `investigate/<topic>`
+- `docs/<topic>`
+- `chore/<topic>`
+
+예:
+- `feature/auth-refactor`
+- `fix/ci-payment-timeout`
+- `review/pr-482-p1-fixes`
+- `investigate/order-rollback`
+- `docs/restclient-migration`
+
+### Naming Rules
+- 짧고 의미 있게
+- 작업 목적이 바로 드러나게
+- temp, test, fix1 같은 모호한 이름 금지
+- 가능하면 PR 번호나 핵심 토픽 포함
 
 ---
 
@@ -416,6 +425,7 @@ Git 루트일 수도 있고, 특정 worktree 디렉토리일 수도 있다.
 
 다음 행동은 피한다.
 
+- **현재 세션이 이미 `cmux` 세션임에도 명령어를 덮어씌워 기존 작업 흐름을 끊기**
 - repo 루트에서 곧바로 작업을 시작해 원본 작업공간을 오염시키기
 - unrelated 작업을 같은 worktree에 계속 쌓기
 - 브랜치명을 임시 이름으로 만들기
@@ -430,10 +440,11 @@ Git 루트일 수도 있고, 특정 worktree 디렉토리일 수도 있다.
 
 1. 사용자는 자연어로만 작업을 지시한다
 2. 작업은 자동으로 적절한 worktree/session으로 라우팅된다
-3. 같은 작업의 후속 작업은 같은 worktree로 귀속된다
-4. 다른 작업은 자동으로 분리된다
-5. 사용자는 workmux 명령을 거의 기억하지 않아도 된다
-6. 단일 저장소 안에서도 여러 작업을 병렬로 안전하게 운영할 수 있다
+3. **기존 사용 중인 세션은 안전하게 보호된다**
+4. 같은 작업의 후속 작업은 같은 worktree로 귀속된다
+5. 다른 작업은 자동으로 분리된다
+6. 사용자는 workmux 명령을 거의 기억하지 않아도 된다
+7. 단일 저장소 안에서도 여러 작업을 병렬로 안전하게 운영할 수 있다
 
 ---
 
