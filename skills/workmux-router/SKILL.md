@@ -84,6 +84,16 @@ Git 루트일 수도 있고, 특정 worktree 디렉토리일 수도 있다.
 
 ---
 
+## Prerequisites
+
+이 스킬이 정상 작동하려면 다음 도구들이 시스템에 설치되어 있어야 한다.
+
+- **git**: (worktree 기능을 지원하는 최신 버전)
+- **workmux**: (백엔드 작업 공간 및 세션 관리자)
+- **tmux**: (workmux가 세션을 유지하기 위해 필요)
+
+---
+
 ## Required Inputs
 
 가능하면 다음 정보를 파악한다.
@@ -245,7 +255,8 @@ Git 루트일 수도 있고, 특정 worktree 디렉토리일 수도 있다.
 
 ## Minimal Execution Algorithm
 
-### Step 1. Context detection
+### Step 1. Context detection & Tool check
+- **기본 도구(`git`, `workmux`, `tmux`)가 설치되어 있는지 확인**
 - 현재 경로 확인
 - git root 확인
 - 현재 브랜치 확인
