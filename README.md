@@ -1,35 +1,35 @@
 # skill-registry
 
-Skill packages for the interop ecosystem.
+인터옵 생태계를 위한 스킬 패키지 저장소.
 
-## Overview
+## 개요
 
-This repository is a **leaf registry** that stores skill packages only. It is NOT the hub — the hub is [`registry-hub`](https://github.com/skillinterop/registry-hub). Wrapper tools consume this registry's `manifest.json` to discover and install skills.
+이 저장소는 스킬 패키지만 저장하는 **리프 레지스트리**입니다. 허브가 아닙니다 -- 허브는 [`registry-hub`](https://github.com/skillinterop/registry-hub)입니다. 래퍼 도구들은 이 레지스트리의 `manifest.json`을 참조하여 스킬을 검색하고 설치합니다.
 
-## Directory Structure
+## 디렉토리 구조
 
 ```
 skill-registry/
-├── manifest.json              # Registry manifest with all skill entries
+├── manifest.json              # 모든 스킬 항목이 포함된 레지스트리 매니페스트
 ├── schemas/
-│   └── manifest.schema.json   # JSON Schema for manifest validation
+│   └── manifest.schema.json   # 매니페스트 검증용 JSON Schema
 ├── skills/
 │   └── <skill-name>/
-│       ├── SKILL.md           # Skill documentation
-│       └── metadata.json      # Skill metadata
+│       ├── SKILL.md           # 스킬 문서
+│       └── metadata.json      # 스킬 메타데이터
 ├── README.md
 └── .gitignore
 ```
 
-## Available Skills
+## 등록된 스킬 목록
 
-| Canonical ID | Name | Version | Description |
-|--------------|------|---------|-------------|
-| `skill/org/[MASKED_EMAIL]` | workmux-router | 1.0.0 | Natural-language task launcher and router using workmux and git worktree |
+| 정규 ID | 이름 | 버전 | 설명 |
+|---------|------|------|------|
+| `skill/org/workmux-router@1.0.0` | workmux-router | 1.0.0 | workmux와 git worktree를 활용한 자연어 작업 실행기 및 라우터 |
 
-## Manifest Format
+## 매니페스트 형식
 
-The `manifest.json` file follows the LeafManifest structure:
+`manifest.json` 파일은 LeafManifest 구조를 따릅니다:
 
 ```json
 {
@@ -42,30 +42,30 @@ The `manifest.json` file follows the LeafManifest structure:
 }
 ```
 
-## How to Add a New Skill
+## 새 스킬 추가 방법
 
-1. Create a directory under `skills/<skill-name>/`
-2. Add `SKILL.md` with skill documentation
-3. Add `metadata.json` with skill metadata
-4. Update `manifest.json` to include the new skill entry
-5. Open a PR with the changes
+1. `skills/<skill-name>/` 디렉토리를 생성합니다
+2. 스킬 문서인 `SKILL.md`를 추가합니다
+3. 스킬 메타데이터인 `metadata.json`을 추가합니다
+4. `manifest.json`에 새 스킬 항목을 추가합니다
+5. 변경 사항으로 PR을 생성합니다
 
-## Canonical ID Format
+## 정규 ID 형식
 
-All skills use the canonical ID format:
+모든 스킬은 다음과 같은 정규 ID 형식을 사용합니다:
 
 ```
 skill/<namespace>/<name>@<version>
 ```
 
-Example: `skill/org/[MASKED_EMAIL]`
+예시: `skill/org/workmux-router@1.0.0`
 
-## Related Repos
+## 관련 저장소
 
-- [`registry-hub`](https://github.com/skillinterop/registry-hub) — Top-level hub that aggregates leaf registries
-- [`cao-profile-registry`](https://github.com/skillinterop/cao-profile-registry) — CAO profile leaf registry
-- [`reprogate-registry`](https://github.com/skillinterop/reprogate-registry) — ReproGate leaf registry
+- [`registry-hub`](https://github.com/skillinterop/registry-hub) -- 리프 레지스트리들을 통합하는 최상위 허브
+- [`cao-profile-registry`](https://github.com/skillinterop/cao-profile-registry) -- CAO 프로필 리프 레지스트리
+- [`reprogate-registry`](https://github.com/skillinterop/reprogate-registry) -- ReproGate 리프 레지스트리
 
-## License
+## 라이선스
 
 MIT
