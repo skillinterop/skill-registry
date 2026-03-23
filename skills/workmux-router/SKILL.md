@@ -1,6 +1,11 @@
 ---
 name: workmux-router
+version: 1.0.0
 description: Natural-language task launcher and router using workmux and git worktree
+author: org
+canonicalId: skill/org/workmux-router@1.0.0
+tags: [workmux, git-worktree, natural-language, task-routing]
+prerequisites: [git, workmux, cmux|tmux]
 ---
 
 # Skill: Workmux Router for Natural-Language Task Launching

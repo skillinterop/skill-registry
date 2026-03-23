@@ -1,0 +1,21 @@
+{
+  "@context": {
+    "@vocab": "http://schema.org/",
+    "skillinterop": "https://skillinterop.org/ns#"
+  },
+  "@type": "DataCatalog",
+  "name": "Skill Registry",
+  "description": "Leaf registry for skillinterop agent skills",
+  "dataset": [
+    {
+      "@type": "SoftwareSourceCode",
+      "identifier": "skill/org/workmux-router@1.0.0",
+      "name": "workmux-router",
+      "version": "1.0.0",
+      "description": "Natural-language task launcher and router using workmux and git worktree",
+      "url": "./skills/workmux-router/SKILL.md",
+      "skillinterop:status": "active",
+      "skillinterop:channel": "stable"
+    }
+  ]
+}
