@@ -15,16 +15,13 @@
       "minLength": 1
     },
     "version": {
-      "type": "string",
-      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+      "$ref": "https://raw.githubusercontent.com/skillinterop/registry-hub/main/schemas/shared/common.schema.json#/definitions/SemanticVersion"
     },
     "channel": {
-      "type": "string",
-      "enum": ["stable", "experimental"]
+      "$ref": "https://raw.githubusercontent.com/skillinterop/registry-hub/main/schemas/shared/common.schema.json#/definitions/Channel"
     },
     "generatedAt": {
-      "type": "string",
-      "format": "date-time"
+      "$ref": "https://raw.githubusercontent.com/skillinterop/registry-hub/main/schemas/shared/common.schema.json#/definitions/ISODateTime"
     },
     "items": {
       "type": "array",
@@ -43,12 +40,10 @@
           "pattern": "^skill/[^/]+/[a-z0-9][a-z0-9-]*@[0-9]+\\.[0-9]+\\.[0-9]+$"
         },
         "name": {
-          "type": "string",
-          "pattern": "^[a-z0-9][a-z0-9-]*$"
+          "$ref": "https://raw.githubusercontent.com/skillinterop/registry-hub/main/schemas/shared/common.schema.json#/definitions/KebabCaseName"
         },
         "version": {
-          "type": "string",
-          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+          "$ref": "https://raw.githubusercontent.com/skillinterop/registry-hub/main/schemas/shared/common.schema.json#/definitions/SemanticVersion"
         },
         "description": {
           "type": "string"
@@ -57,12 +52,10 @@
           "type": "string"
         },
         "channel": {
-          "type": "string",
-          "enum": ["stable", "experimental"]
+          "$ref": "https://raw.githubusercontent.com/skillinterop/registry-hub/main/schemas/shared/common.schema.json#/definitions/Channel"
         },
         "status": {
-          "type": "string",
-          "enum": ["active", "deprecated", "archived"]
+          "$ref": "https://raw.githubusercontent.com/skillinterop/registry-hub/main/schemas/shared/common.schema.json#/definitions/ItemStatus"
         },
         "deprecatedBy": {
           "type": ["string", "null"]
