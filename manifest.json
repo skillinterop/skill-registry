@@ -1,0 +1,22 @@
+{
+  "registryType": "skill",
+  "namespace": "org",
+  "version": "0.1.0",
+  "channel": "experimental",
+  "generatedAt": "2026-03-20T07:00:00Z",
+  "items": [
+    {
+      "canonicalId": "skill/org/workmux-router@1.0.0",
+      "name": "workmux-router",
+      "version": "1.0.0",
+      "description": "Natural-language task launcher and router using workmux and git worktree",
+      "path": "skills/workmux-router",
+      "channel": "stable",
+      "status": "active",
+      "deprecatedBy": null,
+      "metadata": {
+        "prerequisites": ["git", "workmux", "cmux|tmux"]
+      }
+    }
+  ]
+}

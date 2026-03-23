@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "manifest.schema.json",
+  "title": "Skill Registry Manifest",
+  "description": "Schema for skill-registry manifest.json",
+  "type": "object",
+  "required": ["registryType", "namespace", "version", "channel", "generatedAt", "items"],
+  "properties": {
+    "registryType": {
+      "type": "string",
+      "const": "skill"
+    },
+    "namespace": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "channel": {
+      "type": "string",
+      "enum": ["stable", "experimental"]
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ManifestItem"
+      }
+    }
+  },
+  "definitions": {
+    "ManifestItem": {
+      "type": "object",
+      "required": ["canonicalId", "name", "version", "description", "path", "channel", "status", "deprecatedBy", "metadata"],
+      "properties": {
+        "canonicalId": {
+          "type": "string",
+          "pattern": "^skill/[^/]+/[a-z0-9][a-z0-9-]*@[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "description": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "channel": {
+          "type": "string",
+          "enum": ["stable", "experimental"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "deprecated", "archived"]
+        },
+        "deprecatedBy": {
+          "type": ["string", "null"]
+        },
+        "metadata": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

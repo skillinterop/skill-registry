@@ -1,0 +1,11 @@
+{
+  "canonicalId": "skill/org/[MASKED_EMAIL]",
+  "name": "workmux-router",
+  "version": "1.0.0",
+  "description": "Natural-language task launcher and router using workmux and git worktree",
+  "author": "org",
+  "tags": ["workmux", "git-worktree", "natural-language", "task-routing"],
+  "prerequisites": ["git", "workmux", "cmux|tmux"],
+  "createdAt": "2026-03-20T07:00:00Z",
+  "updatedAt": "2026-03-20T07:00:00Z"
+}
