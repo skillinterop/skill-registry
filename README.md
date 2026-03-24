@@ -4,19 +4,19 @@
 
 ## 개요
 
-이 저장소는 스킬 패키지만 저장하는 **리프 레지스트리**입니다. 허브가 아닙니다 -- 허브는 [`registry-hub`](https://github.com/skillinterop/registry-hub)입니다. 래퍼 도구들은 이 레지스트리의 `manifest.json`을 참조하여 스킬을 검색하고 설치합니다.
+이 저장소는 스킬 패키지만 저장하는 **리프 레지스트리**입니다. 허브가 아닙니다 -- 허브는 [`registry-hub`](https://github.com/skillinterop/registry-hub)입니다. 소비자 도구는 이 저장소의 `index.jsonld`를 읽어 스킬을 발견하고, 각 항목의 `url`로 실제 `SKILL.md`를 해석합니다.
 
 ## 디렉토리 구조
 
 ```
 skill-registry/
-├── manifest.json              # 모든 스킬 항목이 포함된 레지스트리 매니페스트
+├── index.jsonld               # 모든 스킬 항목이 포함된 공개 카탈로그
 ├── schemas/
-│   └── manifest.schema.json   # 매니페스트 검증용 JSON Schema
+│   ├── index.schema.json      # index.jsonld 검증용 JSON Schema
+│   └── manifest.schema.json   # 레거시 manifest 계약 (Phase 3 전까지 유지)
 ├── skills/
 │   └── <skill-name>/
-│       ├── SKILL.md           # 스킬 문서
-│       └── metadata.json      # 스킬 메타데이터
+│       └── SKILL.md           # 스킬 문서
 ├── README.md
 └── .gitignore
 ```
@@ -27,18 +27,23 @@ skill-registry/
 |---------|------|------|------|
 | `skill/org/workmux-router@1.0.0` | workmux-router | 1.0.0 | workmux와 git worktree를 활용한 자연어 작업 실행기 및 라우터 |
 
-## 매니페스트 형식
+## 카탈로그 형식
 
-`manifest.json` 파일은 LeafManifest 구조를 따릅니다:
+`index.jsonld` 파일은 JSON-LD `DataCatalog` 구조를 따릅니다:
 
 ```json
 {
-  "registryType": "skill",
-  "namespace": "org",
-  "version": "0.1.0",
-  "channel": "experimental",
-  "generatedAt": "2026-03-20T07:00:00Z",
-  "items": [...]
+  "@type": "DataCatalog",
+  "name": "Skill Registry",
+  "dataset": [
+    {
+      "@type": "SoftwareSourceCode",
+      "identifier": "skill/org/workmux-router@1.0.0",
+      "url": "./skills/workmux-router/SKILL.md",
+      "skillinterop:status": "active",
+      "skillinterop:channel": "stable"
+    }
+  ]
 }
 ```
 
@@ -46,8 +51,8 @@ skill-registry/
 
 1. `skills/<skill-name>/` 디렉토리를 생성합니다
 2. 스킬 문서인 `SKILL.md`를 추가합니다
-3. 스킬 메타데이터인 `metadata.json`을 추가합니다
-4. `manifest.json`에 새 스킬 항목을 추가합니다
+3. `index.jsonld`의 `dataset` 배열에 새 항목을 추가합니다
+4. `schemas/index.schema.json` 기준으로 `index.jsonld`를 검증합니다
 5. 변경 사항으로 PR을 생성합니다
 
 ## 정규 ID 형식
