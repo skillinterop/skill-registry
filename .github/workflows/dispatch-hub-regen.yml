@@ -1,0 +1,33 @@
+name: Dispatch Hub Regeneration
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - index.jsonld
+      - schemas/**
+      - skills/**
+      - .github/workflows/**
+
+permissions:
+  contents: read
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require hub dispatch token
+        env:
+          HUB_DISPATCH_TOKEN: ${{ secrets.HUB_DISPATCH_TOKEN }}
+        run: |
+          test -n "$HUB_DISPATCH_TOKEN" || { echo "HUB_DISPATCH_TOKEN is required" >&2; exit 1; }
+
+      - name: Dispatch hub regeneration
+        env:
+          HUB_DISPATCH_TOKEN: ${{ secrets.HUB_DISPATCH_TOKEN }}
+        run: |
+          curl -sSf -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $HUB_DISPATCH_TOKEN" \
+            https://api.github.com/repos/skillinterop/registry-hub/dispatches \
+            --data '{"event_type":"leaf-registry-updated","client_payload":{"source_repo":"skill-registry","source_registry":"skill","sha":"'"$GITHUB_SHA"'"}}'
