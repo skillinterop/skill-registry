@@ -1,0 +1,71 @@
+name: Leaf PR Validate
+
+on:
+  pull_request:
+    paths:
+      - index.jsonld
+      - schemas/**
+      - skills/**
+      - .github/workflows/**
+
+permissions:
+  contents: read
+
+jobs:
+  leaf-local:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out leaf repository
+        uses: actions/checkout@v4
+
+      - name: Clone hub repository
+        run: git clone --depth 1 https://github.com/skillinterop/registry-hub.git registry-hub-repo
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: registry-hub-repo/package-lock.json
+
+      - name: Install hub dependencies
+        working-directory: registry-hub-repo
+        run: npm ci
+
+      - name: Run leaf-local validation
+        run: |
+          bash registry-hub-repo/scripts/validate-leaf-local.sh \
+            --repo-root "$GITHUB_WORKSPACE" \
+            --logical-root skill-registry \
+            --schema-file "$GITHUB_WORKSPACE/schemas/index.schema.json" \
+            --artifact-dir skills \
+            --artifact-file SKILL.md
+
+  hub-cross-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out changed leaf repository
+        uses: actions/checkout@v4
+        with:
+          path: skill-registry
+
+      - name: Clone sibling repositories
+        run: |
+          git clone --depth 1 https://github.com/skillinterop/registry-hub.git registry-hub-repo
+          git clone --depth 1 https://github.com/skillinterop/cao-profile-registry.git cao-profile-registry
+          git clone --depth 1 https://github.com/skillinterop/reprogate-registry.git reprogate-registry
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: registry-hub-repo/package-lock.json
+
+      - name: Install hub dependencies
+        working-directory: registry-hub-repo
+        run: npm ci
+
+      - name: Run hub cross-repo validation
+        working-directory: registry-hub-repo
+        run: REGISTRY_USE_LOCAL_SOURCES=1 REGISTRY_WORKSPACE_ROOT="$GITHUB_WORKSPACE" bash scripts/validate-registry-contracts.sh
