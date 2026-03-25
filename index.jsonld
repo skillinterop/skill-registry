@@ -5,7 +5,7 @@
   },
   "@type": "DataCatalog",
   "name": "Skill Registry",
-  "description": "Leaf registry for skillinterop agent skills",
+  "description": "Leaf registry for skillinterop agent skills (verified)",
   "dataset": [
     {
       "@type": "SoftwareSourceCode",
