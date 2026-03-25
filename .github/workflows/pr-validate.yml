@@ -69,3 +69,5 @@ jobs:
       - name: Run hub cross-repo validation
         working-directory: registry-hub-repo
         run: REGISTRY_USE_LOCAL_SOURCES=1 REGISTRY_WORKSPACE_ROOT="$GITHUB_WORKSPACE" bash scripts/validate-registry-contracts.sh
+
+# trigger check context
